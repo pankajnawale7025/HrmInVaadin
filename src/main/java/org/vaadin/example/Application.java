@@ -7,6 +7,7 @@ import com.vaadin.flow.theme.Theme;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 @SpringBootApplication
 @PWA(name = "Project Base for Vaadin with Spring", shortName = "Project Base")
 @Theme("my-theme")
+@EnableFeignClients
+
 public class Application implements AppShellConfigurator {
 
     public static void main(String[] args) {

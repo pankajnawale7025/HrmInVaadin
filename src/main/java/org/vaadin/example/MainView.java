@@ -22,7 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import org.vaadin.example.feign.UserServiceFeignClient;
+import org.vaadin.example.model.Response;
 import org.vaadin.example.model.User;
+import org.vaadin.example.service.UserService;
 
 import java.net.URL;
 import java.util.stream.Collectors;
@@ -45,7 +48,19 @@ public class MainView extends VerticalLayout {
     private TextField username = new TextField("Username");
     private PasswordField password = new PasswordField("Password");
 
+    @Autowired
+    UserService userService;
+//    @Autowired
+//     UserServiceFeignClient userServiceFeignClient;
+
+
     public MainView() {
+
+//        if(userServiceFeignClient!=null)
+//        {
+//
+//        System.out.println(userServiceFeignClient.getUser());
+//        }
 
 
         User user = new User();
@@ -76,18 +91,12 @@ public class MainView extends VerticalLayout {
         LoginOverlay loginOverlay = new LoginOverlay();
 
 
-
-
-
         Div div = new Div();
         Div imagediv = new Div();
         imagediv.getStyle().set("width", "300px").set("height", "200px").set("overflow", "hidden");
 
         Component image = getImage();
-        image.getStyle().set("max-width", "100%")
-                .set("height", "auto")
-                .set("display", "block")
-                .set("margin", "0 auto");
+        image.getStyle().set("max-width", "100%").set("height", "auto").set("display", "block").set("margin", "0 auto");
         imagediv.add(image);
         layout.setSpacing(false);
 
@@ -98,26 +107,22 @@ public class MainView extends VerticalLayout {
         //div.add(customloginForm);
 
         LoginForm loginForm = new LoginForm();
-
-
-
         loginForm.addLoginListener(event -> {
-
-
             String username = event.getUsername();
             String pass = event.getPassword();
             // Perform authentication logic here
-
-            if (true) {
-                // Redirect to the main view or perform other actions
-                Notification.show("Login successful!   \n userName is ==>"+username+"\n Pasword is ==>"+pass);
+            Object object = userService.validateUSer("http://localhost:8081/customer/validateCustomer?emailAddress=" + username + "&contactNumber=" + pass);
+            Response response = (Response) object;
+            System.out.println("responsis ======>" + response);
+            System.out.println("response.isSuccess()===>"+response.isSuccess());
+            if (response.isSuccess()) {
+                Notification.show("Login successful!   \n userName is ==>" + username + "\n Pasword is ==>" + pass + "Objet is ===>\n" + object);
+                getUI().ifPresent(ui -> ui.navigate("home"));
             } else {
                 // Show an error message
                 Notification.show("Authentication failed. Please check your credentials.");
             }
         });
-
-
 
         div.add(loginForm);
         div.getElement().getStyle().setAlignItems(Style.AlignItems.CENTER).set("display", "flex").set("justify-content", "center").set("padding", "10px");
