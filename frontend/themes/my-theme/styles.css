@@ -17,3 +17,26 @@ vaadin-text-field.bordered::part(input-field) {
 }
 
 
+
+vaadin-text-field.input::part(input-field) {
+  background: white;
+  border: 1px solid gray;
+  width: 270px;
+
+}
+.outer-div{
+
+     background-radius:10px;
+    padding: 5px;
+    margin: auto;
+    margin-top: 10%;
+}
+
+.inner-div
+{
+    display: flex;
+    flex-direction: column;
+    width: 280px;
+    padding: 15px;
+}
+

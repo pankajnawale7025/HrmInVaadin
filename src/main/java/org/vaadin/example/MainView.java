@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * The main view contains a text field for getting the user name and a button
  * that shows a greeting message in a notification.
  */
-@Route
+@Route("mainview")
 public class MainView extends VerticalLayout {
     Binder<User> binder = new Binder<>(User.class);
     private TextField username = new TextField("Username");
