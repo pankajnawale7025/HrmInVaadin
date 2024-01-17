@@ -6,60 +6,62 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.Route;
 import org.vaadin.example.model.User;
 
-@Route("")
+@Route("dataBinding")
 public class DataBinding extends VerticalLayout {
-
 
 
     Binder<User> binder = new Binder<>(User.class);
 
+    TextField password = new TextField("password");
+    TextField userName = new TextField("userName");
+
     public DataBinding() throws ValidationException {
-        User user = new User();
 
-        TextField userName = new TextField("userName");
-        TextField password = new TextField("password");
+        User user = new User("Pankaj", "Nawale");
+        //binder.bindInstanceFields(this);
 
-        user.setUserName("userName");
-        user.setPassword("password");
-        Button saveButton = new Button("Save",  event -> {
+
+        binder.forField(userName).withValidator(name -> name.length() > 3, "name not less than 3 word").asRequired()
+                .bind(User::getUserName, User::setUserName);
+
+
+        binder.forField(password).withValidator(name -> name.length() > 3, "Password is required ").asRequired()
+                .bind(User::getPassword, User::setPassword);
+
+        //  binder.setBean(user);
+        binder.readBean(user);
+
+        Button saveButton = new Button("Save", event -> {
             try {
+                BinderValidationStatus<User> status = binder.validate();
+                if (status.hasErrors()) {
+                    Notification.show(status.getValidationErrors().toString());
+                }
                 binder.writeBean(user);
                 System.out.println(binder);
-                // A real application would also save
-                // the updated person
-                // using the application's backend
-                Notification.show("user  is===>"+user);
-            } catch (ValidationException e) {
-                Notification.show("Error is===>"+e.getMessage());
+
+                Notification.show("user  is===>" + user);
+            } catch (Exception e) {
+                Notification.show("Error is===>" + e.getMessage());
             }
         });
 
-        binder.readBean(user);
-
-
-
-        binder.writeBean(user);
 
         Div div = new Div();
 //        binder.bind(userName, User::getUserName, User::setUserName);
 //        binder.bind(password, User::getPassword, User::setPassword);
 
 
-
-
         System.out.println(binder);
-
-
 
 
         saveButton.getStyle().set("width", "270px");
         div.add(userName, password, saveButton);
-
-
 
 
         userName.addClassName("input");

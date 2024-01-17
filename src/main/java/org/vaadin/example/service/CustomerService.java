@@ -2,19 +2,22 @@ package org.vaadin.example.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.vaadin.example.config.RestTemplateConfig;
+import org.vaadin.example.model.Customer;
 import org.vaadin.example.model.Response;
 
 @Service
-public class UserService {
+public class CustomerService {
 
     public final RestTemplate restTemplate;
 
 
     @Autowired
-    public UserService(RestTemplate restTemplate) {
+    public CustomerService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
@@ -28,5 +31,16 @@ public class UserService {
         return response;
     }
 
+
+    public Response addCustomer(Customer customer) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Customer> request = new HttpEntity<>(customer, headers);
+        String url = "http://localhost:8081/customer/addCustomer";
+        // Make the POST request
+        Response response = restTemplate.postForObject(url, request, Response.class);
+        return response;
+    }
 
 }

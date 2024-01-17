@@ -1,18 +1,15 @@
 package org.vaadin.example;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -22,13 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import org.vaadin.example.feign.UserServiceFeignClient;
 import org.vaadin.example.model.Response;
 import org.vaadin.example.model.User;
-import org.vaadin.example.service.UserService;
-
-import java.net.URL;
-import java.util.stream.Collectors;
+import org.vaadin.example.service.CustomerService;
 
 /**
  * A sample Vaadin view class.
@@ -49,7 +42,7 @@ public class MainView extends VerticalLayout {
     private PasswordField password = new PasswordField("Password");
 
     @Autowired
-    UserService userService;
+    CustomerService customerService;
 //    @Autowired
 //     UserServiceFeignClient userServiceFeignClient;
 
@@ -111,7 +104,7 @@ public class MainView extends VerticalLayout {
             String username = event.getUsername();
             String pass = event.getPassword();
             // Perform authentication logic here
-            Object object = userService.validateUSer("http://localhost:8081/customer/validateCustomer?emailAddress=" + username + "&contactNumber=" + pass);
+            Object object = customerService.validateUSer("http://localhost:8081/customer/validateCustomer?emailAddress=" + username + "&contactNumber=" + pass);
             Response response = (Response) object;
             System.out.println("responsis ======>" + response);
             System.out.println("response.isSuccess()===>"+response.isSuccess());

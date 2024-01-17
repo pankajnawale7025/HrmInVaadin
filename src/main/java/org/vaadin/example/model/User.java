@@ -1,7 +1,15 @@
 package org.vaadin.example.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 public class User {
+
     private String userName;
+
+
+    private  String password;
 
     public String getUserName() {
         return userName;
@@ -11,7 +19,16 @@ public class User {
         this.userName = userName;
     }
 
-    private  String password;
+    public User(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+    }
+    public User()
+    {
+
+    }
+
+
 
     public String getPassword() {
         return password;
