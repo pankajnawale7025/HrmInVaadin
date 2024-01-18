@@ -19,8 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import org.vaadin.example.model.Response;
-import org.vaadin.example.model.User;
+import org.vaadin.example.dto.Response;
+import org.vaadin.example.dto.User;
 import org.vaadin.example.service.CustomerService;
 
 /**

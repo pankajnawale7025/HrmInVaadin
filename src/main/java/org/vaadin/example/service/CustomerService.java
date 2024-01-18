@@ -7,8 +7,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.vaadin.example.model.Customer;
-import org.vaadin.example.model.Response;
+import org.vaadin.example.dto.Customer;
+import org.vaadin.example.dto.Response;
 
 @Service
 public class CustomerService {
@@ -40,6 +40,7 @@ public class CustomerService {
         String url = "http://localhost:8081/customer/addCustomer";
         // Make the POST request
         Response response = restTemplate.postForObject(url, request, Response.class);
+        System.out.println("response in addCustomer is ===>"+response);
         return response;
     }
 

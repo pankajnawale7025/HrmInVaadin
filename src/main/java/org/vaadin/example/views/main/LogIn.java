@@ -12,7 +12,7 @@ import com.vaadin.flow.router.Route;
 import javax.swing.text.AsyncBoxView;
 
 
-@Route(value="loginpage", layout = MainLayout.class)
+@Route(value="login", layout = MainLayout.class)
 @PageTitle("loginpagepage")
 public class LogIn extends VerticalLayout {
 
@@ -31,7 +31,6 @@ public class LogIn extends VerticalLayout {
         childDiv.addClassName("login-form-child");
 
         parentDiv.add(childDiv);
-
 
 
         return parentDiv;

@@ -1,8 +1,4 @@
-package org.vaadin.example.model;
-
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+package org.vaadin.example.dto;
 
 public class User {
 

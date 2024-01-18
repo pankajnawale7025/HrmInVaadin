@@ -9,7 +9,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.Route;
-import org.vaadin.example.model.User;
+import org.vaadin.example.dto.User;
 
 @Route("dataBinding")
 public class DataBinding extends VerticalLayout {

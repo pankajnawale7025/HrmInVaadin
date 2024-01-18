@@ -1,5 +1,6 @@
 package org.vaadin.example.views.main;
 
+import com.vaadin.flow.component.BlurNotifier;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -8,7 +9,6 @@ import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -18,17 +18,16 @@ import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.servlet.ServletOutputStream;
+import javassist.bytecode.analysis.Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.example.MainView;
-import org.vaadin.example.model.Customer;
-import org.vaadin.example.model.Response;
-import org.vaadin.example.model.User;
+import org.vaadin.example.dto.Customer;
+import org.vaadin.example.dto.Response;
 import org.vaadin.example.service.CustomerService;
+import org.vaadin.example.utility.Utility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "registrs", layout = MainLayout.class)
 @PageTitle("registration-page")
 public class RegisterPage extends VerticalLayout implements BeforeLeaveObserver {
 
@@ -37,6 +36,7 @@ public class RegisterPage extends VerticalLayout implements BeforeLeaveObserver 
     CustomerService customerService;
     Binder<Customer> binder = new Binder<>(Customer.class);
     Customer customer = new Customer();
+
 
 
     public RegisterPage() {
@@ -62,8 +62,14 @@ public class RegisterPage extends VerticalLayout implements BeforeLeaveObserver 
 
 
         TextField contactNumber = new TextField("Contact Number");
+        contactNumber.setPattern("^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$");
         contactNumber.setRequiredIndicatorVisible(true);
+        ;
         contactNumber.setErrorMessage("This field is required");
+
+
+        contactNumber.addBlurListener(this::validateTextField);
+
 
         TextField emailAddress = new TextField("Email Address");
         emailAddress.setRequiredIndicatorVisible(true);
@@ -84,10 +90,14 @@ public class RegisterPage extends VerticalLayout implements BeforeLeaveObserver 
                 Response response = customerService.addCustomer(customer);
                 if (response.isSuccess()) {
                     Notification.show("Sign Up done Successfully.");
+                } else {
+
+                    response.getErrorMessage().forEach(x -> Notification.show(x));
+
                 }
-                Notification.show("customer  is===>" + customer);
             } catch (Exception e) {
-                Notification.show("Error is===>" + e.getMessage());
+//                Notification.show("Error is===>" + e.getMessage());
+                Notification.show("Error is===>" + e);
             }
         });
 
@@ -138,7 +148,7 @@ public class RegisterPage extends VerticalLayout implements BeforeLeaveObserver 
 
     public void beforeLeave(BeforeLeaveEvent event) {
 
-        Notification.show("beforeLeave"+hasChanges());
+        Notification.show("beforeLeave" + hasChanges());
         if (hasChanges()) {
             BeforeLeaveEvent.ContinueNavigationAction action =
                     event.postpone();
@@ -151,7 +161,8 @@ public class RegisterPage extends VerticalLayout implements BeforeLeaveObserver 
         }
     }
 
-        AtomicBoolean value = new AtomicBoolean(false);
+    AtomicBoolean value = new AtomicBoolean(false);
+
     private boolean hasChanges() {
 //        Notification.show("value of hashchang in  "+binder.hasChanges());
 //        binder.addStatusChangeListener(event -> {
@@ -162,6 +173,41 @@ public class RegisterPage extends VerticalLayout implements BeforeLeaveObserver 
 
         return true;
     }
+
+
+    // To close the session
+//    protected void onAttach(AttachEvent attachEvent) {
+//        UI ui = getUI().get();
+//        Button button = new Button("Logout", event -> {
+//            // Redirect this page immediately
+//            ui.getPage().executeJs("window.location.href='logout.html'");
+//
+//            // Close the session
+//            ui.getSession().close();
+//        });
+//
+//        add(button);
+//
+//        // Notice quickly if other UIs are closed
+//        ui.setPollInterval(3000);
+//    }
+    private void validateTextField(BlurNotifier.BlurEvent<TextField> event) {
+        TextField textField = event.getSource();
+
+        // Get the entered value
+        String enteredValue = textField.getValue();
+
+        // Set the pattern for the validator
+        String pattern = "^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$";
+
+        // Check if the entered value matches the pattern
+        if (!enteredValue.matches(pattern)) {
+            // Show an error message
+            Notification.show("Invalid format", 3000, Notification.Position.BOTTOM_START);
+        }
+
+    }
+
 
 }
 

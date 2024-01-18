@@ -1,4 +1,4 @@
-package org.vaadin.example.model;
+package org.vaadin.example.dto;
 
 import lombok.*;
 
